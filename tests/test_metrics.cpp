@@ -2,6 +2,7 @@
 #include "../include/metrics/ConnectedComponentsMetric.h"
 #include "../include/metrics/DensityMetric.h"
 #include "../include/metrics/BipartiteCheckMetric.h"
+#include "../include/metrics/BridgesMetric.h"
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("Connected components in empty graph", "[metrics]") {
@@ -167,4 +168,66 @@ TEST_CASE("Mixed graph with non bipartite component is not bipartite", "[metrics
     graph.addEdge(4, 5);
 
     REQUIRE_FALSE(metric.calculate(graph));
+}
+ TEST_CASE("Empty graph has no bridges", "[metrics]") {
+    Graph graph;
+    BridgesMetric metric;
+
+    REQUIRE(metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Single edge graph has one bridge", "[metrics]") {
+    Graph graph;
+    BridgesMetric metric;
+
+    graph.addEdge(1, 2);
+
+    REQUIRE(metric.calculate(graph) == 1);
+}
+
+TEST_CASE("Path graph on four vertices has three bridges", "[metrics]") {
+    Graph graph;
+    BridgesMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 4);
+
+    REQUIRE(metric.calculate(graph) == 3);
+}
+
+TEST_CASE("Triangle graph has no bridges", "[metrics]") {
+    Graph graph;
+    BridgesMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 1);
+
+    REQUIRE(metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Graph with one cycle tail has one bridge", "[metrics]") {
+    Graph graph;
+    BridgesMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 1);
+    graph.addEdge(3, 4);
+
+    REQUIRE(metric.calculate(graph) == 1);
+}
+
+TEST_CASE("Two components are processed correctly for bridges", "[metrics]") {
+    Graph graph;
+    BridgesMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(4, 5);
+    graph.addEdge(5, 6);
+    graph.addEdge(6, 4);
+
+    REQUIRE(metric.calculate(graph) == 2);
 }
