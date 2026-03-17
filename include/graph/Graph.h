@@ -3,7 +3,7 @@
 #include "IGraphStorage.h"
 
 #include <memory>
-#include <vector>
+#include <set>
 
 class Graph {
 public:
@@ -16,8 +16,8 @@ public:
     void addEdge(int from, int to);
     bool hasEdge(int from, int to) const;
 
-    const std::vector<int>& getNeighbors(int vertex) const;
-    std::vector<int> getVertices() const;
+    const std::set<int>& getNeighbors(int vertex) const;
+    std::set<int> getVertices() const;
 
     int vertexCount() const;
     int edgeCount() const;

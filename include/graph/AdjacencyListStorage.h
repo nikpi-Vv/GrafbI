@@ -3,7 +3,7 @@
 #include "IGraphStorage.h"
 
 #include <map>
-#include <vector>
+#include <set>
 
 class AdjacencyListStorage : public IGraphStorage {
 public:
@@ -13,13 +13,13 @@ public:
     void addEdge(int from, int to) override;
     bool hasEdge(int from, int to) const override;
 
-    const std::vector<int>& getNeighbors(int vertex) const override;
-    std::vector<int> getVertices() const override;
+    const std::set<int>& getNeighbors(int vertex) const override;
+    std::set<int> getVertices() const override;
 
     int vertexCount() const override;
     int edgeCount() const override;
 
 private:
-    std::map<int, std::vector<int>> adjacency_;
+    std::map<int, std::set<int>> adjacency_;
     int edge_count_ = 0;
 };

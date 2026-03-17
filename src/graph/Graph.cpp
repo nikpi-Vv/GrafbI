@@ -23,11 +23,11 @@ bool Graph::hasEdge(int from, int to) const {
     return storage_->hasEdge(from, to);
 }
 
-const std::vector<int>& Graph::getNeighbors(int vertex) const {
+const std::set<int>& Graph::getNeighbors(int vertex) const {
     return storage_->getNeighbors(vertex);
 }
 
-std::vector<int> Graph::getVertices() const {
+std::set<int> Graph::getVertices() const {
     return storage_->getVertices();
 }
 

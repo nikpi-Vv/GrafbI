@@ -1,6 +1,5 @@
 #include "../../include/graph/AdjacencyListStorage.h"
 
-#include <algorithm>
 #include <stdexcept>
 
 void AdjacencyListStorage::addVertex(int vertex) {
@@ -25,13 +24,11 @@ void AdjacencyListStorage::addEdge(int from, int to) {
     addVertex(from);
     addVertex(to);
 
-    if (hasEdge(from, to)) {
-        return;
+    if (!hasEdge(from, to)) {
+        adjacency_[from].insert(to);
+        adjacency_[to].insert(from);
+        ++edge_count_;
     }
-
-    adjacency_[from].push_back(to);
-    adjacency_[to].push_back(from);
-    ++edge_count_;
 }
 
 bool AdjacencyListStorage::hasEdge(int from, int to) const {
@@ -39,11 +36,10 @@ bool AdjacencyListStorage::hasEdge(int from, int to) const {
         return false;
     }
 
-    const std::vector<int>& neighbors = adjacency_.at(from);
-    return std::find(neighbors.begin(), neighbors.end(), to) != neighbors.end();
+    return adjacency_.at(from).find(to) != adjacency_.at(from).end();
 }
 
-const std::vector<int>& AdjacencyListStorage::getNeighbors(int vertex) const {
+const std::set<int>& AdjacencyListStorage::getNeighbors(int vertex) const {
     if (!hasVertex(vertex)) {
         throw std::out_of_range("Vertex does not exist");
     }
@@ -51,11 +47,11 @@ const std::vector<int>& AdjacencyListStorage::getNeighbors(int vertex) const {
     return adjacency_.at(vertex);
 }
 
-std::vector<int> AdjacencyListStorage::getVertices() const {
-    std::vector<int> vertices;
+std::set<int> AdjacencyListStorage::getVertices() const {
+    std::set<int> vertices;
 
     for (const auto& pair : adjacency_) {
-        vertices.push_back(pair.first);
+        vertices.insert(pair.first);
     }
 
     return vertices;
