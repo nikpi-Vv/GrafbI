@@ -1,6 +1,7 @@
 #include "../include/graph/Graph.h"
 #include "../include/metrics/ConnectedComponentsMetric.h"
 #include "../include/metrics/DensityMetric.h"
+#include "../include/metrics/BipartiteCheckMetric.h"
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("Connected components in empty graph", "[metrics]") {
@@ -101,4 +102,69 @@ TEST_CASE("Density of complete graph on four vertices is one", "[metrics]") {
     graph.addEdge(3, 4);
 
     REQUIRE(metric.calculate(graph) == Catch::Approx(1.0));
+}
+
+TEST_CASE("Empty graph is bipartite", "[metrics]") {
+    Graph graph;
+    BipartiteCheckMetric metric;
+
+    REQUIRE(metric.calculate(graph));
+}
+
+TEST_CASE("Graph with isolated vertices is bipartite", "[metrics]") {
+    Graph graph;
+    BipartiteCheckMetric metric;
+
+    graph.addVertex(1);
+    graph.addVertex(2);
+    graph.addVertex(3);
+
+    REQUIRE(metric.calculate(graph));
+}
+
+TEST_CASE("Path graph is bipartite", "[metrics]") {
+    Graph graph;
+    BipartiteCheckMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 4);
+
+    REQUIRE(metric.calculate(graph));
+}
+
+TEST_CASE("Even cycle is bipartite", "[metrics]") {
+    Graph graph;
+    BipartiteCheckMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 4);
+    graph.addEdge(4, 1);
+
+    REQUIRE(metric.calculate(graph));
+}
+
+TEST_CASE("Triangle is not bipartite", "[metrics]") {
+    Graph graph;
+    BipartiteCheckMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 1);
+
+    REQUIRE_FALSE(metric.calculate(graph));
+}
+
+TEST_CASE("Mixed graph with non bipartite component is not bipartite", "[metrics]") {
+    Graph graph;
+    BipartiteCheckMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 1);
+
+    graph.addEdge(4, 5);
+
+    REQUIRE_FALSE(metric.calculate(graph));
 }
