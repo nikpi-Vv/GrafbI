@@ -4,7 +4,8 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude -Iexternal/catch2
 GRAPH_SRC = src/graph/AdjacencyListStorage.cpp \
             src/graph/Graph.cpp \
             src/algorithms/Dfs.cpp \
-            src/metrics/ConnectedComponentsMetric.cpp
+            src/metrics/ConnectedComponentsMetric.cpp \
+            src/metrics/DensityMetric.cpp
 
 TEST_SRC = tests/test_main.cpp \
            tests/test_graph.cpp \
