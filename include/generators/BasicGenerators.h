@@ -51,3 +51,14 @@ public:
 private:
     int vertex_count_;
 };
+
+class CompleteBipartiteGraphGenerator : public IGraphGenerator {
+public:
+    CompleteBipartiteGraphGenerator(int left_size, int right_size);
+
+    Graph generate() const override;
+
+private:
+    int left_size_;
+    int right_size_;
+};

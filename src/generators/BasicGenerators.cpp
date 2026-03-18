@@ -123,3 +123,28 @@ Graph WheelGraphGenerator::generate() const {
 
     return graph;
 }
+
+CompleteBipartiteGraphGenerator::CompleteBipartiteGraphGenerator(int left_size, int right_size)
+    : left_size_(left_size), right_size_(right_size) {
+    if (left_size_ < 0 || right_size_ < 0) {
+        throw std::invalid_argument("Part size must not be negative");
+    }
+}
+
+Graph CompleteBipartiteGraphGenerator::generate() const {
+    Graph graph;
+
+    int total = left_size_ + right_size_;
+
+    for (int vertex = 1; vertex <= total; ++vertex) {
+        graph.addVertex(vertex);
+    }
+
+    for (int left = 1; left <= left_size_; ++left) {
+        for (int right = left_size_ + 1; right <= total; ++right) {
+            graph.addEdge(left, right);
+        }
+    }
+
+    return graph;
+}

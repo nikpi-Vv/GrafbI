@@ -127,3 +127,53 @@ TEST_CASE("Wheel graph with one vertex is valid", "[generators]") {
     REQUIRE(graph.vertexCount() == 1);
     REQUIRE(graph.edgeCount() == 0);
 }
+
+TEST_CASE("Complete bipartite graph generator creates correct graph", "[generators]") {
+    CompleteBipartiteGraphGenerator generator(2, 3);
+    Graph graph = generator.generate();
+
+    BipartiteCheckMetric bipartite_metric;
+    ConnectedComponentsMetric components_metric;
+    BridgesMetric bridges_metric;
+    ArticulationPointsMetric articulation_metric;
+    DensityMetric density_metric;
+
+    REQUIRE(graph.vertexCount() == 5);
+    REQUIRE(graph.edgeCount() == 6);
+    REQUIRE(bipartite_metric.calculate(graph));
+    REQUIRE(components_metric.calculate(graph) == 1);
+    REQUIRE(bridges_metric.calculate(graph) == 0);
+    REQUIRE(articulation_metric.calculate(graph) == 0);
+    REQUIRE(density_metric.calculate(graph) == Catch::Approx(0.6));
+}
+
+TEST_CASE("Complete bipartite graph with one and many vertices is a star", "[generators]") {
+    CompleteBipartiteGraphGenerator generator(1, 4);
+    Graph graph = generator.generate();
+
+    BipartiteCheckMetric bipartite_metric;
+    BridgesMetric bridges_metric;
+    ArticulationPointsMetric articulation_metric;
+
+    REQUIRE(graph.vertexCount() == 5);
+    REQUIRE(graph.edgeCount() == 4);
+    REQUIRE(bipartite_metric.calculate(graph));
+    REQUIRE(bridges_metric.calculate(graph) == 4);
+    REQUIRE(articulation_metric.calculate(graph) == 1);
+}
+
+TEST_CASE("Complete bipartite graph handles empty part", "[generators]") {
+    CompleteBipartiteGraphGenerator generator(0, 3);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 3);
+    REQUIRE(graph.edgeCount() == 0);
+}
+
+TEST_CASE("Complete bipartite graph with both empty parts is empty", "[generators]") {
+    CompleteBipartiteGraphGenerator generator(0, 0);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 0);
+    REQUIRE(graph.edgeCount() == 0);
+}
