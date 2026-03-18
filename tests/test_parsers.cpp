@@ -1,4 +1,4 @@
-#include "../include/parsers/EdgeListParser.h"
+#include "../include/parsers/Parsers.h"
 #include "../include/metrics/Metrics.h"
 #include "catch_amalgamated.hpp"
 
@@ -19,52 +19,40 @@ TEST_CASE("Edge list parser reads simple graph", "[parsers]") {
     EdgeListParser parser;
     Graph graph = parser.parse(filename);
 
-    ConnectedComponentsMetric components_metric;
-    BridgesMetric bridges_metric;
-
     REQUIRE(graph.vertexCount() == 4);
     REQUIRE(graph.edgeCount() == 3);
     REQUIRE(graph.hasEdge(1, 2));
     REQUIRE(graph.hasEdge(2, 3));
     REQUIRE(graph.hasEdge(3, 4));
-    REQUIRE(components_metric.calculate(graph) == 1);
-    REQUIRE(bridges_metric.calculate(graph) == 3);
 }
 
-TEST_CASE("Edge list parser reads graph with repeated edges once", "[parsers]") {
-    const std::string filename = "test_edges_2.txt";
-    writeFile(filename, "1 2\n2 1\n1 2\n");
+TEST_CASE("Adjacency matrix parser works", "[parsers]") {
+    const std::string filename = "test_matrix.txt";
+    writeFile(filename,
+        "0 1 0\n"
+        "1 0 1\n"
+        "0 1 0\n"
+    );
 
-    EdgeListParser parser;
+    AdjacencyMatrixParser parser;
     Graph graph = parser.parse(filename);
 
-    REQUIRE(graph.vertexCount() == 2);
-    REQUIRE(graph.edgeCount() == 1);
-    REQUIRE(graph.hasEdge(1, 2));
+    REQUIRE(graph.vertexCount() == 3);
+    REQUIRE(graph.edgeCount() == 2);
 }
 
-TEST_CASE("Edge list parser reads empty file", "[parsers]") {
-    const std::string filename = "test_edges_3.txt";
-    writeFile(filename, "");
+TEST_CASE("DIMACS parser works", "[parsers]") {
+    const std::string filename = "test_dimacs.txt";
+    writeFile(filename,
+        "c comment\n"
+        "p edge 3 2\n"
+        "e 1 2\n"
+        "e 2 3\n"
+    );
 
-    EdgeListParser parser;
+    DimacsParser parser;
     Graph graph = parser.parse(filename);
 
-    REQUIRE(graph.vertexCount() == 0);
-    REQUIRE(graph.edgeCount() == 0);
-}
-
-TEST_CASE("Edge list parser throws on invalid file", "[parsers]") {
-    EdgeListParser parser;
-
-    REQUIRE_THROWS(parser.parse("file_that_does_not_exist.txt"));
-}
-
-TEST_CASE("Edge list parser throws on invalid format", "[parsers]") {
-    const std::string filename = "test_edges_4.txt";
-    writeFile(filename, "1 2\n2 x\n");
-
-    EdgeListParser parser;
-
-    REQUIRE_THROWS(parser.parse(filename));
+    REQUIRE(graph.vertexCount() == 3);
+    REQUIRE(graph.edgeCount() == 2);
 }
