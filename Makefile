@@ -6,7 +6,8 @@ GRAPH_SRC = src/graph/AdjacencyListStorage.cpp \
             src/algorithms/Dfs.cpp \
             src/metrics/Metrics.cpp \
             src/generators/BasicGenerators.cpp \
-            src/parsers/Parsers.cpp
+            src/parsers/Parsers.cpp \
+            src/serializers/Serializers.cpp
 
 TEST_SRC = tests/test_main.cpp \
            tests/test_graph.cpp \
