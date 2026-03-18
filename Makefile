@@ -11,7 +11,9 @@ GRAPH_SRC = src/graph/AdjacencyListStorage.cpp \
             src/metrics/ArticulationPointsMetric.cpp \
             src/generators/CompleteGraphGenerator.cpp \
             src/generators/PathGraphGenerator.cpp \
-            src/generators/CycleGraphGenerator.cpp
+            src/generators/CycleGraphGenerator.cpp \
+			src/generators/StarGraphGenerator.cpp \
+			src/generators/WheelGraphGenerator.cpp
 
 TEST_SRC = tests/test_main.cpp \
            tests/test_graph.cpp \

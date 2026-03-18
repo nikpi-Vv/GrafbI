@@ -6,6 +6,8 @@
 #include "../include/metrics/BipartiteCheckMetric.h"
 #include "../include/metrics/BridgesMetric.h"
 #include "../include/metrics/ArticulationPointsMetric.h"
+#include "../include/generators/StarGraphGenerator.h"
+#include "../include/generators/WheelGraphGenerator.h"
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("Complete graph generator creates correct graph", "[generators]") {
@@ -76,4 +78,60 @@ TEST_CASE("Generators handle zero vertices", "[generators]") {
     REQUIRE(complete_generator.generate().vertexCount() == 0);
     REQUIRE(path_generator.generate().vertexCount() == 0);
     REQUIRE(cycle_generator.generate().vertexCount() == 0);
+}
+
+TEST_CASE("Star graph generator creates correct graph", "[generators]") {
+    StarGraphGenerator generator(5);
+    Graph graph = generator.generate();
+
+    BipartiteCheckMetric bipartite_metric;
+    ConnectedComponentsMetric components_metric;
+    BridgesMetric bridges_metric;
+    ArticulationPointsMetric articulation_metric;
+
+    REQUIRE(graph.vertexCount() == 5);
+    REQUIRE(graph.edgeCount() == 4);
+    REQUIRE(components_metric.calculate(graph) == 1);
+    REQUIRE(bipartite_metric.calculate(graph));
+    REQUIRE(bridges_metric.calculate(graph) == 4);
+    REQUIRE(articulation_metric.calculate(graph) == 1);
+}
+
+TEST_CASE("Star graph with one vertex is valid", "[generators]") {
+    StarGraphGenerator generator(1);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 1);
+    REQUIRE(graph.edgeCount() == 0);
+}
+
+TEST_CASE("Wheel graph generator creates correct graph", "[generators]") {
+    WheelGraphGenerator generator(6);
+    Graph graph = generator.generate();
+
+    ConnectedComponentsMetric components_metric;
+    BridgesMetric bridges_metric;
+    ArticulationPointsMetric articulation_metric;
+
+    REQUIRE(graph.vertexCount() == 6);
+    REQUIRE(graph.edgeCount() == 10);
+    REQUIRE(components_metric.calculate(graph) == 1);
+    REQUIRE(bridges_metric.calculate(graph) == 0);
+    REQUIRE(articulation_metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Wheel graph on four vertices is valid", "[generators]") {
+    WheelGraphGenerator generator(4);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 4);
+    REQUIRE(graph.edgeCount() == 6);
+}
+
+TEST_CASE("Wheel graph with one vertex is valid", "[generators]") {
+    WheelGraphGenerator generator(1);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 1);
+    REQUIRE(graph.edgeCount() == 0);
 }
