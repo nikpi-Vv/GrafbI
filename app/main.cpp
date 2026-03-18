@@ -4,7 +4,6 @@
 #include "../include/serializers/Serializers.h"
 
 #include <iostream>
-#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -57,6 +56,22 @@ namespace {
         throw std::invalid_argument("Unknown parser type");
     }
 
+    void serializeGraph(const std::string& type, const Graph& graph, const std::string& filename) {
+        if (type == "edges") {
+            EdgesSerializer serializer;
+            serializer.serialize(graph, filename);
+            return;
+        }
+
+        if (type == "dot") {
+            GraphVizSerializer serializer;
+            serializer.serialize(graph, filename);
+            return;
+        }
+
+        throw std::invalid_argument("Unknown serializer type");
+    }
+
     void printMetric(const std::string& name, const Graph& graph) {
         if (name == "components") {
             ConnectedComponentsMetric metric;
@@ -96,7 +111,7 @@ int main(int argc, char* argv[]) {
     try {
         if (argc < 2) {
             std::cout << "Usage:\n";
-            std::cout << "  app generate <type> <size> <output>\n";
+            std::cout << "  app generate <type> <size> <serializer> <output>\n";
             std::cout << "  app metric <metric_name> <parser_type> <input>\n";
             return 0;
         }
@@ -104,18 +119,17 @@ int main(int argc, char* argv[]) {
         std::string command = argv[1];
 
         if (command == "generate") {
-            if (argc != 5) {
+            if (argc != 6) {
                 throw std::invalid_argument("Invalid generate command");
             }
 
             std::string type = argv[2];
             int size = std::stoi(argv[3]);
-            std::string output = argv[4];
+            std::string serializer_type = argv[4];
+            std::string output = argv[5];
 
             Graph graph = generateGraph(type, size);
-
-            EdgesSerializer serializer;
-            serializer.serialize(graph, output);
+            serializeGraph(serializer_type, graph, output);
 
             return 0;
         }
