@@ -4,21 +4,14 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -Iinclude -Iexternal/catch2
 GRAPH_SRC = src/graph/AdjacencyListStorage.cpp \
             src/graph/Graph.cpp \
             src/algorithms/Dfs.cpp \
-            src/metrics/ConnectedComponentsMetric.cpp \
-            src/metrics/DensityMetric.cpp \
-            src/metrics/BipartiteCheckMetric.cpp \
-            src/metrics/BridgesMetric.cpp \
-            src/metrics/ArticulationPointsMetric.cpp \
-            src/generators/CompleteGraphGenerator.cpp \
-            src/generators/PathGraphGenerator.cpp \
-            src/generators/CycleGraphGenerator.cpp \
-			src/generators/StarGraphGenerator.cpp \
-			src/generators/WheelGraphGenerator.cpp
+            src/metrics/Metrics.cpp \
+            src/generators/BasicGenerators.cpp
 
 TEST_SRC = tests/test_main.cpp \
            tests/test_graph.cpp \
-           external/catch2/catch_amalgamated.cpp \
-		   
+           tests/test_metrics.cpp \
+           tests/test_generators.cpp \
+           external/catch2/catch_amalgamated.cpp
 
 TEST_BIN = bin/tests.exe
 

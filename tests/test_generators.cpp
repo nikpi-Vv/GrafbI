@@ -1,13 +1,5 @@
-#include "../include/generators/CompleteGraphGenerator.h"
-#include "../include/generators/PathGraphGenerator.h"
-#include "../include/generators/CycleGraphGenerator.h"
-#include "../include/metrics/ConnectedComponentsMetric.h"
-#include "../include/metrics/DensityMetric.h"
-#include "../include/metrics/BipartiteCheckMetric.h"
-#include "../include/metrics/BridgesMetric.h"
-#include "../include/metrics/ArticulationPointsMetric.h"
-#include "../include/generators/StarGraphGenerator.h"
-#include "../include/generators/WheelGraphGenerator.h"
+#include "../include/generators/BasicGenerators.h"
+#include "../include/metrics/Metrics.h"
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("Complete graph generator creates correct graph", "[generators]") {

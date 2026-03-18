@@ -1,0 +1,53 @@
+#pragma once
+
+#include "IGraphGenerator.h"
+
+class CompleteGraphGenerator : public IGraphGenerator {
+public:
+    explicit CompleteGraphGenerator(int vertex_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+};
+
+class PathGraphGenerator : public IGraphGenerator {
+public:
+    explicit PathGraphGenerator(int vertex_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+};
+
+class CycleGraphGenerator : public IGraphGenerator {
+public:
+    explicit CycleGraphGenerator(int vertex_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+};
+
+class StarGraphGenerator : public IGraphGenerator {
+public:
+    explicit StarGraphGenerator(int vertex_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+};
+
+class WheelGraphGenerator : public IGraphGenerator {
+public:
+    explicit WheelGraphGenerator(int vertex_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+};

@@ -1,11 +1,6 @@
 #include "../include/graph/Graph.h"
-#include "../include/metrics/ConnectedComponentsMetric.h"
-#include "../include/metrics/DensityMetric.h"
-#include "../include/metrics/BipartiteCheckMetric.h"
-#include "../include/metrics/BridgesMetric.h"
-#include "../include/metrics/ArticulationPointsMetric.h"
+#include "../include/metrics/Metrics.h"
 #include "catch_amalgamated.hpp"
-
 
 TEST_CASE("Connected components in empty graph", "[metrics]") {
     Graph graph;
@@ -171,7 +166,8 @@ TEST_CASE("Mixed graph with non bipartite component is not bipartite", "[metrics
 
     REQUIRE_FALSE(metric.calculate(graph));
 }
- TEST_CASE("Empty graph has no bridges", "[metrics]") {
+
+TEST_CASE("Empty graph has no bridges", "[metrics]") {
     Graph graph;
     BridgesMetric metric;
 
@@ -233,6 +229,7 @@ TEST_CASE("Two components are processed correctly for bridges", "[metrics]") {
 
     REQUIRE(metric.calculate(graph) == 2);
 }
+
 TEST_CASE("Empty graph has no articulation points", "[metrics]") {
     Graph graph;
     ArticulationPointsMetric metric;

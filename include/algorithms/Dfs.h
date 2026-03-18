@@ -1,9 +1,25 @@
 #pragma once
 
 #include "../graph/Graph.h"
-#include "DfsVisitor.h"
 
 #include <set>
+
+class DfsVisitor {
+public:
+    virtual ~DfsVisitor() = default;
+
+    virtual void startComponent(int) {
+    }
+
+    virtual void discoverVertex(int, int) {
+    }
+
+    virtual void examineEdge(int, int) {
+    }
+
+    virtual void finishVertex(int, int) {
+    }
+};
 
 class Dfs {
 public:
