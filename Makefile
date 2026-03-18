@@ -8,7 +8,10 @@ GRAPH_SRC = src/graph/AdjacencyListStorage.cpp \
             src/metrics/DensityMetric.cpp \
             src/metrics/BipartiteCheckMetric.cpp \
             src/metrics/BridgesMetric.cpp \
-            src/metrics/ArticulationPointsMetric.cpp
+            src/metrics/ArticulationPointsMetric.cpp \
+            src/generators/CompleteGraphGenerator.cpp \
+            src/generators/PathGraphGenerator.cpp \
+            src/generators/CycleGraphGenerator.cpp
 
 TEST_SRC = tests/test_main.cpp \
            tests/test_graph.cpp \
