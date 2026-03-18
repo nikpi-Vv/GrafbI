@@ -3,7 +3,9 @@
 #include "../include/metrics/DensityMetric.h"
 #include "../include/metrics/BipartiteCheckMetric.h"
 #include "../include/metrics/BridgesMetric.h"
+#include "../include/metrics/ArticulationPointsMetric.h"
 #include "catch_amalgamated.hpp"
+
 
 TEST_CASE("Connected components in empty graph", "[metrics]") {
     Graph graph;
@@ -230,4 +232,74 @@ TEST_CASE("Two components are processed correctly for bridges", "[metrics]") {
     graph.addEdge(6, 4);
 
     REQUIRE(metric.calculate(graph) == 2);
+}
+TEST_CASE("Empty graph has no articulation points", "[metrics]") {
+    Graph graph;
+    ArticulationPointsMetric metric;
+
+    REQUIRE(metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Single vertex graph has no articulation points", "[metrics]") {
+    Graph graph;
+    ArticulationPointsMetric metric;
+
+    graph.addVertex(1);
+
+    REQUIRE(metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Single edge graph has no articulation points", "[metrics]") {
+    Graph graph;
+    ArticulationPointsMetric metric;
+
+    graph.addEdge(1, 2);
+
+    REQUIRE(metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Path graph on four vertices has two articulation points", "[metrics]") {
+    Graph graph;
+    ArticulationPointsMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 4);
+
+    REQUIRE(metric.calculate(graph) == 2);
+}
+
+TEST_CASE("Triangle graph has no articulation points", "[metrics]") {
+    Graph graph;
+    ArticulationPointsMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 1);
+
+    REQUIRE(metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Star graph has one articulation point", "[metrics]") {
+    Graph graph;
+    ArticulationPointsMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(1, 3);
+    graph.addEdge(1, 4);
+    graph.addEdge(1, 5);
+
+    REQUIRE(metric.calculate(graph) == 1);
+}
+
+TEST_CASE("Graph with cycle tail has one articulation point", "[metrics]") {
+    Graph graph;
+    ArticulationPointsMetric metric;
+
+    graph.addEdge(1, 2);
+    graph.addEdge(2, 3);
+    graph.addEdge(3, 1);
+    graph.addEdge(3, 4);
+
+    REQUIRE(metric.calculate(graph) == 1);
 }

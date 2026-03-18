@@ -7,7 +7,8 @@ GRAPH_SRC = src/graph/AdjacencyListStorage.cpp \
             src/metrics/ConnectedComponentsMetric.cpp \
             src/metrics/DensityMetric.cpp \
             src/metrics/BipartiteCheckMetric.cpp \
-            src/metrics/BridgesMetric.cpp
+            src/metrics/BridgesMetric.cpp \
+            src/metrics/ArticulationPointsMetric.cpp
 
 TEST_SRC = tests/test_main.cpp \
            tests/test_graph.cpp \
