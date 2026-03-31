@@ -62,3 +62,24 @@ private:
     int left_size_;
     int right_size_;
 };
+
+class TreeGraphGenerator : public IGraphGenerator {
+public:
+    explicit TreeGraphGenerator(int vertex_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+};
+
+class ComponentsGraphGenerator : public IGraphGenerator {
+public:
+    ComponentsGraphGenerator(int vertex_count, int component_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+    int component_count_;
+};

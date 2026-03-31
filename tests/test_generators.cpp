@@ -177,3 +177,61 @@ TEST_CASE("Complete bipartite graph with both empty parts is empty", "[generator
     REQUIRE(graph.vertexCount() == 0);
     REQUIRE(graph.edgeCount() == 0);
 }
+
+TEST_CASE("Tree graph generator creates tree", "[generators]") {
+    TreeGraphGenerator generator(7);
+    Graph graph = generator.generate();
+
+    ConnectedComponentsMetric components_metric;
+    BridgesMetric bridges_metric;
+    BipartiteCheckMetric bipartite_metric;
+
+    REQUIRE(graph.vertexCount() == 7);
+    REQUIRE(graph.edgeCount() == 6);
+    REQUIRE(components_metric.calculate(graph) == 1);
+    REQUIRE(bridges_metric.calculate(graph) == 6);
+    REQUIRE(bipartite_metric.calculate(graph));
+}
+
+TEST_CASE("Tree graph generator handles empty graph", "[generators]") {
+    TreeGraphGenerator generator(0);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 0);
+    REQUIRE(graph.edgeCount() == 0);
+}
+
+TEST_CASE("Components graph generator creates required number of components", "[generators]") {
+    ComponentsGraphGenerator generator(10, 3);
+    Graph graph = generator.generate();
+
+    ConnectedComponentsMetric components_metric;
+
+    REQUIRE(graph.vertexCount() == 10);
+    REQUIRE(components_metric.calculate(graph) == 3);
+}
+
+TEST_CASE("Components graph generator with one component is connected", "[generators]") {
+    ComponentsGraphGenerator generator(6, 1);
+    Graph graph = generator.generate();
+
+    ConnectedComponentsMetric components_metric;
+    REQUIRE(components_metric.calculate(graph) == 1);
+}
+
+TEST_CASE("Components graph generator with all isolated vertices works", "[generators]") {
+    ComponentsGraphGenerator generator(5, 5);
+    Graph graph = generator.generate();
+
+    ConnectedComponentsMetric components_metric;
+    REQUIRE(graph.edgeCount() == 0);
+    REQUIRE(components_metric.calculate(graph) == 5);
+}
+
+TEST_CASE("Components graph generator handles empty graph", "[generators]") {
+    ComponentsGraphGenerator generator(0, 0);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 0);
+    REQUIRE(graph.edgeCount() == 0);
+}
