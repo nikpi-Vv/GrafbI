@@ -1,6 +1,8 @@
 #include "../../include/generators/BasicGenerators.h"
 
 #include <stdexcept>
+#include <random>
+#include <stdexcept>
 
 CompleteGraphGenerator::CompleteGraphGenerator(int vertex_count) : vertex_count_(vertex_count) {
     if (vertex_count_ < 0) {
@@ -353,6 +355,39 @@ Graph CubicGraphGenerator::generate() const {
     int half = vertex_count_ / 2;
     for (int vertex = 1; vertex <= half; ++vertex) {
         graph.addEdge(vertex, vertex + half);
+    }
+
+    return graph;
+}
+
+RandomGraphGenerator::RandomGraphGenerator(int vertex_count, double probability)
+    : vertex_count_(vertex_count), probability_(probability) {
+    if (vertex_count_ < 0) {
+        throw std::invalid_argument("Vertex count must not be negative");
+    }
+
+    if (probability_ < 0.0 || probability_ > 1.0) {
+        throw std::invalid_argument("Probability must be between 0 and 1");
+    }
+}
+
+Graph RandomGraphGenerator::generate() const {
+    Graph graph;
+
+    for (int vertex = 1; vertex <= vertex_count_; ++vertex) {
+        graph.addVertex(vertex);
+    }
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::bernoulli_distribution dist(probability_);
+
+    for (int from = 1; from <= vertex_count_; ++from) {
+        for (int to = from + 1; to <= vertex_count_; ++to) {
+            if (dist(gen)) {
+                graph.addEdge(from, to);
+            }
+        }
     }
 
     return graph;

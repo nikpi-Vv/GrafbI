@@ -115,3 +115,14 @@ public:
 private:
     int vertex_count_;
 };
+
+class RandomGraphGenerator : public IGraphGenerator {
+public:
+    RandomGraphGenerator(int vertex_count, double probability);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+    double probability_;
+};
