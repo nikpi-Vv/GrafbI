@@ -1,0 +1,120 @@
+# GrafbI
+
+Проект для генерации, анализа, чтения и сохранения неориентированных графов без петель и кратных рёбер.
+## Структура проекта
+
+- `include/graph` — класс графа и storage
+- `include/algorithms` — DFS
+- `include/metrics` — метрики графа
+- `include/generators` — генераторы графов
+- `include/parsers` — парсеры входных файлов
+- `include/serializers` — сериализаторы графов
+- `src/` — реализации
+- `tests/` — автоматические тесты
+- `app/main.cpp` — консольное приложение
+
+## Возможности
+
+- хранение графа через собственный класс `Graph`
+- обход графа с помощью DFS
+- вычисление метрик:
+  - количество компонент связности
+  - плотность
+  - проверка на двудольность
+  - количество мостов
+  - количество точек сочленения
+- генерация графов:
+  - complete
+  - path
+  - cycle
+  - star
+  - wheel
+  - tree
+  - cubic
+  - random
+  - complete_bipartite
+  - components
+  - bridges
+  - articulation
+- чтение графов из файлов:
+  - edges
+  - matrix
+  - dimacs
+- сохранение графов в файлы:
+  - edges
+  - adj
+  - dot
+
+## Сборка
+
+```bash
+Сборка проекта
+mingw32-make
+Запуск тестов
+mingw32-make run-tests
+Очистка
+mingw32-make clean
+
+Примеры запуска
+Генерация графа
+.\bin\app.exe generate path 5 edges out.edges
+.\bin\app.exe generate cycle 6 adj out.txt
+.\bin\app.exe generate tree 7 dot tree.dot
+.\bin\app.exe generate random 6 0.3 edges rnd.edges
+.\bin\app.exe generate complete_bipartite 2 4 adj bip.txt
+.\bin\app.exe generate components 10 3 adj comp.txt
+.\bin\app.exe generate bridges 8 4 adj br.txt
+.\bin\app.exe generate articulation 8 3 adj art.txt
+.\bin\app.exe generate cubic 6 adj cubic.txt
+Вычисление метрик
+.\bin\app.exe metric components edges out.edges
+.\bin\app.exe metric density edges out.edges
+.\bin\app.exe metric bipartite edges out.edges
+.\bin\app.exe metric bridges edges out.edges
+.\bin\app.exe metric articulation edges out.edges
+Форматы файлов
+.edges
+
+Список рёбер, по одному ребру в строке:
+
+1 2
+2 3
+3 4
+
+
+.adj / .txt
+
+Список смежности:
+
+1: 2 5
+2: 1 3
+3: 2 4
+4: 3 5
+5: 1 4
+
+
+.dot
+
+Текстовый формат GraphViz:
+
+graph G {
+    1;
+    2;
+    3;
+    1 -- 2;
+    2 -- 3;
+}
+
+Файл .dot можно:
+
+открыть как обычный текстовый файл
+вставить в онлайн GraphViz viewer
+использовать в сторонних инструментах визуализации
+Ограничения
+графы неориентированные
+петли не допускаются
+кратные рёбра не допускаются
+некоторые генераторы имеют ограничения на параметры:
+cubic: число вершин должно быть чётным и не меньше 4
+components: число компонент не должно превышать число вершин
+bridges и articulation: параметры должны быть корректны для данного числа вершин
