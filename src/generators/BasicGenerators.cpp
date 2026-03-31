@@ -216,3 +216,114 @@ Graph ComponentsGraphGenerator::generate() const {
 
     return graph;
 }
+
+BridgesGraphGenerator::BridgesGraphGenerator(int vertex_count, int bridge_count)
+    : vertex_count_(vertex_count), bridge_count_(bridge_count) {
+    if (vertex_count_ < 0) {
+        throw std::invalid_argument("Vertex count must not be negative");
+    }
+
+    if (bridge_count_ < 0) {
+        throw std::invalid_argument("Bridge count must not be negative");
+    }
+
+    if (bridge_count_ > vertex_count_ - 1 && vertex_count_ > 0) {
+        throw std::invalid_argument("Too many bridges for given vertex count");
+    }
+}
+
+Graph BridgesGraphGenerator::generate() const {
+    Graph graph;
+
+    for (int vertex = 1; vertex <= vertex_count_; ++vertex) {
+        graph.addVertex(vertex);
+    }
+
+    if (vertex_count_ == 0) {
+        return graph;
+    }
+
+    int used_vertices = bridge_count_ + 1;
+
+    if (used_vertices > vertex_count_) {
+        throw std::invalid_argument("Too many bridges for given vertex count");
+    }
+
+    for (int vertex = 1; vertex <= bridge_count_; ++vertex) {
+        graph.addEdge(vertex, vertex + 1);
+    }
+
+    if (used_vertices < vertex_count_) {
+        int cycle_start = used_vertices;
+        int cycle_end = vertex_count_;
+
+        if (cycle_end - cycle_start + 1 >= 3) {
+            for (int vertex = cycle_start; vertex < cycle_end; ++vertex) {
+                graph.addEdge(vertex, vertex + 1);
+            }
+            graph.addEdge(cycle_end, cycle_start);
+        } else {
+            for (int vertex = used_vertices + 1; vertex <= vertex_count_; ++vertex) {
+                graph.addEdge(used_vertices, vertex);
+            }
+        }
+    }
+
+    return graph;
+}
+
+ArticulationPointsGraphGenerator::ArticulationPointsGraphGenerator(int vertex_count, int articulation_count)
+    : vertex_count_(vertex_count), articulation_count_(articulation_count) {
+    if (vertex_count_ < 0) {
+        throw std::invalid_argument("Vertex count must not be negative");
+    }
+
+    if (articulation_count_ < 0) {
+        throw std::invalid_argument("Articulation count must not be negative");
+    }
+
+    if (vertex_count_ == 0 && articulation_count_ != 0) {
+        throw std::invalid_argument("Too many articulation points for given vertex count");
+    }
+
+    if (vertex_count_ > 0 && articulation_count_ > vertex_count_ - 2) {
+        throw std::invalid_argument("Too many articulation points for given vertex count");
+    }
+}
+
+Graph ArticulationPointsGraphGenerator::generate() const {
+    Graph graph;
+
+    for (int vertex = 1; vertex <= vertex_count_; ++vertex) {
+        graph.addVertex(vertex);
+    }
+
+    if (vertex_count_ == 0) {
+        return graph;
+    }
+
+    if (articulation_count_ == 0) {
+        if (vertex_count_ >= 3) {
+            for (int vertex = 1; vertex < vertex_count_; ++vertex) {
+                graph.addEdge(vertex, vertex + 1);
+            }
+            graph.addEdge(vertex_count_, 1);
+        } else if (vertex_count_ == 2) {
+            graph.addEdge(1, 2);
+        }
+        return graph;
+    }
+
+    int chain_vertices = articulation_count_ + 2;
+
+    for (int vertex = 1; vertex < chain_vertices; ++vertex) {
+        graph.addEdge(vertex, vertex + 1);
+    }
+
+    for (int vertex = chain_vertices + 1; vertex <= vertex_count_; ++vertex) {
+        graph.addEdge(chain_vertices - 1, vertex);
+        graph.addEdge(chain_vertices, vertex);
+    }
+
+    return graph;
+}

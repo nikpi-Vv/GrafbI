@@ -235,3 +235,53 @@ TEST_CASE("Components graph generator handles empty graph", "[generators]") {
     REQUIRE(graph.vertexCount() == 0);
     REQUIRE(graph.edgeCount() == 0);
 }
+
+TEST_CASE("Bridges graph generator creates required number of bridges", "[generators]") {
+    BridgesGraphGenerator generator(7, 3);
+    Graph graph = generator.generate();
+
+    BridgesMetric bridges_metric;
+    REQUIRE(graph.vertexCount() == 7);
+    REQUIRE(bridges_metric.calculate(graph) == 3);
+}
+
+TEST_CASE("Bridges graph generator with zero bridges works", "[generators]") {
+    BridgesGraphGenerator generator(6, 0);
+    Graph graph = generator.generate();
+
+    BridgesMetric bridges_metric;
+    REQUIRE(bridges_metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Bridges graph generator can create tree", "[generators]") {
+    BridgesGraphGenerator generator(5, 4);
+    Graph graph = generator.generate();
+
+    BridgesMetric bridges_metric;
+    REQUIRE(bridges_metric.calculate(graph) == 4);
+}
+
+TEST_CASE("Articulation points graph generator creates required number of articulation points", "[generators]") {
+    ArticulationPointsGraphGenerator generator(7, 3);
+    Graph graph = generator.generate();
+
+    ArticulationPointsMetric metric;
+    REQUIRE(graph.vertexCount() == 7);
+    REQUIRE(metric.calculate(graph) == 3);
+}
+
+TEST_CASE("Articulation points graph generator with zero articulation points works", "[generators]") {
+    ArticulationPointsGraphGenerator generator(6, 0);
+    Graph graph = generator.generate();
+
+    ArticulationPointsMetric metric;
+    REQUIRE(metric.calculate(graph) == 0);
+}
+
+TEST_CASE("Articulation points graph generator can create path like graph", "[generators]") {
+    ArticulationPointsGraphGenerator generator(5, 3);
+    Graph graph = generator.generate();
+
+    ArticulationPointsMetric metric;
+    REQUIRE(metric.calculate(graph) == 3);
+}

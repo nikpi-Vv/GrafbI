@@ -68,7 +68,13 @@ namespace {
             serializer.serialize(graph, filename);
             return;
         }
-
+        
+        if (type == "adj") {
+            AdjacencyListSerializer serializer;
+            serializer.serialize(graph, filename);
+            return;
+        }
+        
         throw std::invalid_argument("Unknown serializer type");
     }
 

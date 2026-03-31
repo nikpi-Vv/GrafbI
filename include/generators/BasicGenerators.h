@@ -83,3 +83,25 @@ private:
     int vertex_count_;
     int component_count_;
 };
+
+class BridgesGraphGenerator : public IGraphGenerator {
+public:
+    BridgesGraphGenerator(int vertex_count, int bridge_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+    int bridge_count_;
+};
+
+class ArticulationPointsGraphGenerator : public IGraphGenerator {
+public:
+    ArticulationPointsGraphGenerator(int vertex_count, int articulation_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+    int articulation_count_;
+};

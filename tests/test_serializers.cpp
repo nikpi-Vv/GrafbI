@@ -73,3 +73,20 @@ TEST_CASE("GraphViz serializer writes empty graph", "[serializers]") {
 
     REQUIRE(content.find("graph G") != std::string::npos);
 }
+
+TEST_CASE("Adjacency list serializer writes adjacency list", "[serializers]") {
+    CycleGraphGenerator generator(4);
+    Graph graph = generator.generate();
+
+    AdjacencyListSerializer serializer;
+    const std::string filename = "test_adj.txt";
+
+    serializer.serialize(graph, filename);
+
+    std::string content = readFile(filename);
+
+    REQUIRE(content.find("1: 2 4") != std::string::npos);
+    REQUIRE(content.find("2: 1 3") != std::string::npos);
+    REQUIRE(content.find("3: 2 4") != std::string::npos);
+    REQUIRE(content.find("4: 1 3") != std::string::npos);
+}
