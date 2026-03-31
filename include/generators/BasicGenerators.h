@@ -105,3 +105,13 @@ private:
     int vertex_count_;
     int articulation_count_;
 };
+
+class CubicGraphGenerator : public IGraphGenerator {
+public:
+    explicit CubicGraphGenerator(int vertex_count);
+
+    Graph generate() const override;
+
+private:
+    int vertex_count_;
+};

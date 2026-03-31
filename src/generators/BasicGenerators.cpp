@@ -327,3 +327,33 @@ Graph ArticulationPointsGraphGenerator::generate() const {
 
     return graph;
 }
+
+CubicGraphGenerator::CubicGraphGenerator(int vertex_count) : vertex_count_(vertex_count) {
+    if (vertex_count_ < 4) {
+        throw std::invalid_argument("Cubic graph requires at least 4 vertices");
+    }
+
+    if (vertex_count_ % 2 != 0) {
+        throw std::invalid_argument("Cubic graph requires even number of vertices");
+    }
+}
+
+Graph CubicGraphGenerator::generate() const {
+    Graph graph;
+
+    for (int vertex = 1; vertex <= vertex_count_; ++vertex) {
+        graph.addVertex(vertex);
+    }
+
+    for (int vertex = 1; vertex < vertex_count_; ++vertex) {
+        graph.addEdge(vertex, vertex + 1);
+    }
+    graph.addEdge(vertex_count_, 1);
+
+    int half = vertex_count_ / 2;
+    for (int vertex = 1; vertex <= half; ++vertex) {
+        graph.addEdge(vertex, vertex + half);
+    }
+
+    return graph;
+}

@@ -285,3 +285,37 @@ TEST_CASE("Articulation points graph generator can create path like graph", "[ge
     ArticulationPointsMetric metric;
     REQUIRE(metric.calculate(graph) == 3);
 }
+
+TEST_CASE("Cubic graph generator creates graph with degree three", "[generators]") {
+    CubicGraphGenerator generator(6);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 6);
+    REQUIRE(graph.edgeCount() == 9);
+
+    std::set<int> vertices = graph.getVertices();
+    for (int vertex : vertices) {
+        REQUIRE(graph.getNeighbors(vertex).size() == 3);
+    }
+}
+
+TEST_CASE("Cubic graph generator works for eight vertices", "[generators]") {
+    CubicGraphGenerator generator(8);
+    Graph graph = generator.generate();
+
+    REQUIRE(graph.vertexCount() == 8);
+    REQUIRE(graph.edgeCount() == 12);
+
+    std::set<int> vertices = graph.getVertices();
+    for (int vertex : vertices) {
+        REQUIRE(graph.getNeighbors(vertex).size() == 3);
+    }
+}
+
+TEST_CASE("Cubic graph generator throws on odd number of vertices", "[generators]") {
+    REQUIRE_THROWS(CubicGraphGenerator(5));
+}
+
+TEST_CASE("Cubic graph generator throws on too few vertices", "[generators]") {
+    REQUIRE_THROWS(CubicGraphGenerator(2));
+}
