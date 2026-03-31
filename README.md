@@ -1,118 +1,233 @@
+
 # GrafbI
 
-Проект по работе с неориентированными графами без петель и кратных рёбер.
+Проект для генерации, анализа, чтения и сохранения неориентированных графов без петель и кратных рёбер.
 
-Программа умеет:
+## Возможности
 
-- хранить граф в собственной структуре данных
-- обходить граф с помощью DFS
-- вычислять основные метрики графа
-- генерировать разные типы графов
-- читать графы из файлов в нескольких форматах
-- сохранять графы в нескольких форматах
-- работать через консольное приложение
-- проверяться автоматическими тестами
+- собственный класс `Graph`
+- обход графа с помощью DFS
+- метрики:
+  - количество компонент связности
+  - плотность
+  - проверка на двудольность
+  - количество мостов
+  - количество точек сочленения
+- генераторы:
+  - complete
+  - path
+  - cycle
+  - star
+  - wheel
+  - tree
+  - cubic
+  - random
+  - complete_bipartite
+  - components
+  - bridges
+  - articulation
+- парсеры:
+  - edges
+  - matrix
+  - dimacs
+- сериализаторы:
+  - edges
+  - adj
+  - dot
+- консольное приложение
+- автоматические тесты
 
----
+## Ограничения
 
-## 1. Идея проекта
+- графы неориентированные
+- петли не допускаются
+- кратные рёбра не допускаются
 
-В проекте реализован собственный класс `Graph`, который представляет неориентированный граф без петель и кратных рёбер.
+Дополнительные ограничения:
+- `cubic` — число вершин должно быть чётным и не меньше 4
+- `components` — число компонент не должно превышать число вершин
+- `random` — вероятность должна быть от 0 до 1
 
-Внутри граф хранится через отдельный backend хранения. Сейчас используется список смежности.
+## Структура проекта
 
-Также в проекте есть:
+- `include/graph` — граф и storage
+- `include/algorithms` — DFS
+- `include/metrics` — метрики
+- `include/generators` — генераторы
+- `include/parsers` — парсеры
+- `include/serializers` — сериализаторы
+- `src/` — реализации
+- `tests/` — тесты
+- `app/main.cpp` — CLI
+- `external/catch2` — Catch2
+- `Makefile` — сборка
 
-- отдельный обход DFS
-- отдельные классы для метрик
-- отдельные генераторы графов
-- отдельные парсеры форматов входных файлов
-- отдельные сериализаторы форматов выходных файлов
-- консольное приложение для работы с проектом
-- тесты
+## Сборка
 
----
+```bash
+mingw32-make
+````
 
-## 2. Основные ограничения
+## Запуск тестов
 
-Проект работает со следующими ограничениями:
+```bash
+mingw32-make run-tests
+```
 
-- графы **неориентированные**
-- **петли запрещены**
-- **кратные рёбра запрещены**
-- вершины нумеруются целыми положительными числами, начиная с `1`
+## Очистка
 
-Некоторые генераторы имеют дополнительные ограничения, они описаны ниже.
+```bash
+mingw32-make clean
+```
 
----
+## Команды CLI
 
-## 3. Структура проекта
+### Генерация графа
+
+Формат:
+
+```bash
+.\bin\app.exe generate <type> <size> <serializer> <output>
+```
+
+Примеры:
+
+```bash
+.\bin\app.exe generate path 5 edges out.edges
+.\bin\app.exe generate cycle 6 adj out.txt
+.\bin\app.exe generate tree 7 dot tree.dot
+.\bin\app.exe generate cubic 6 adj cubic.txt
+```
+
+### Генерация случайного графа
+
+```bash
+.\bin\app.exe generate random <size> <probability> <serializer> <output>
+```
+
+Пример:
+
+```bash
+.\bin\app.exe generate random 6 0.3 edges random.edges
+```
+
+### Генерация графа с двумя параметрами
+
+Подходит для:
+
+* `complete_bipartite`
+* `components`
+* `bridges`
+* `articulation`
+
+Формат:
+
+```bash
+.\bin\app.exe generate <type> <first> <second> <serializer> <output>
+```
+
+Примеры:
+
+```bash
+.\bin\app.exe generate complete_bipartite 2 4 adj bip.txt
+.\bin\app.exe generate components 10 3 adj comp.txt
+.\bin\app.exe generate bridges 8 4 adj br.txt
+.\bin\app.exe generate articulation 8 3 adj art.txt
+```
+
+### Вычисление метрик
+
+Формат:
+
+```bash
+.\bin\app.exe metric <metric_name> <parser_type> <input>
+```
+
+Где:
+
+* `metric_name`:
+
+  * components
+  * density
+  * bipartite
+  * bridges
+  * articulation
+
+* `parser_type`:
+
+  * edges
+  * matrix
+  * dimacs
+
+Примеры:
+
+```bash
+.\bin\app.exe metric components edges out.edges
+.\bin\app.exe metric density edges out.edges
+.\bin\app.exe metric bridges edges out.edges
+```
+
+## Форматы файлов
+
+### `.edges`
+
+Список рёбер:
 
 ```text
-GrafbI/
-  include/
-    algorithms/
-      Dfs.h
+1 2
+2 3
+3 4
+```
 
-    generators/
-      BasicGenerators.h
-      IGraphGenerator.h
+### `.adj` / `.txt`
 
-    graph/
-      AdjacencyListStorage.h
-      Graph.h
-      IGraphStorage.h
+Список смежности:
 
-    metrics/
-      Metrics.h
+```text
+1: 2 5
+2: 1 3
+3: 2 4
+```
 
-    parsers/
-      IGraphParser.h
-      Parsers.h
+### `.dot`
 
-    serializers/
-      IGraphSerializer.h
-      Serializers.h
+Формат GraphViz:
 
-  src/
-    algorithms/
-      Dfs.cpp
+```text
+graph G {
+    1;
+    2;
+    1 -- 2;
+}
+```
 
-    generators/
-      BasicGenerators.cpp
+## Тесты
 
-    graph/
-      AdjacencyListStorage.cpp
-      Graph.cpp
+В проекте есть тесты на:
 
-    metrics/
-      Metrics.cpp
+* граф
+* метрики
+* генераторы
+* парсеры
+* сериализаторы
 
-    parsers/
-      Parsers.cpp
+Во время тестов могут создаваться временные файлы в корне проекта, например:
 
-    serializers/
-      Serializers.cpp
+* `test_graph.edges`
+* `test_empty.dot`
+* `test_adj.txt`
+* `test_matrix.txt`
 
-  tests/
-    test_main.cpp
-    test_graph.cpp
-    test_metrics.cpp
-    test_generators.cpp
-    test_parsers.cpp
-    test_serializers.cpp
+Это нормально.
 
-  app/
-    main.cpp
+## Кратко про архитектуру
 
-  external/
-    catch2/
-      catch_amalgamated.hpp
-      catch_amalgamated.cpp
+* `Graph` — внешний класс графа
+* `AdjacencyListStorage` — хранение графа
+* `Dfs` — отдельный обход
+* `Metrics` — отдельные метрики
+* `BasicGenerators` — генераторы
+* `Parsers` — чтение из файлов
+* `Serializers` — сохранение в файлы
+* `main.cpp` — консольный интерфейс
 
-  bin/
-    tests.exe
-    app.exe
-
-  Makefile
-  README.md# 
